@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+class Task {
+    private String name;
+    private String description;
+    private String dueDate;
+
+    public Task(String name, String description, String dueDate) {
+        this.name = name;
+        this.description = description;
+        this.dueDate = dueDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+}
+
+public class TaskManagementSystem {
+    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("1. Add Task");
+            System.out.println("2. Remove Task");
+            System.out.println("3. List Tasks");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = getUserChoice();
+
+            switch (choice) {
+                case 1:
+                    addTask();
+                    break;
+                case 2:
+                    removeTask();
+                    break;
+                case 3:
+                    listTasks();
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static int getUserChoice() {
+        int choice;
+        while (true) {
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear the invalid input
+            }
+        }
+        return choice;
+    }
+
+    private static void addTask() {
+        System.out.print("Enter task name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter task description: ");
+        String description = scanner.nextLine();
+        System.out.print("Enter due date: ");
+        String dueDate = scanner.nextLine();
+        Task task = new Task(name, description, dueDate);
+        tasks.add(task);
+        System.out.println("Task added successfully.");
+    }
+
+    private static void removeTask() {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks to remove.");
+            return;
+        }
+
+        System.out.print("Enter index of task to remove: ");
+        int index = getUserChoice() - 1;
+        if (index < 0 || index >= tasks.size()) {
+            System.out.println("Invalid index.");
+            return;
+        }
+
+        Task removedTask = tasks.remove(index);
+        System.out.println("Task removed: " + removedTask.getName());
+    }
+
+    private static void listTasks() {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks to display.");
+            return;
+        }
+
+        System.out.println("Tasks:");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            System.out.println((i + 1) + ". " + task.getName() + " - " + task.getDescription() + " - Due: " + task.getDueDate());
+        }
+    }
+}
